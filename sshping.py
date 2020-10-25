@@ -7,7 +7,7 @@ from os.path import expanduser
 from pythonping import ping
 from pprint import pprint
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 class SSHPing():
     def __init__(self, target=None, count=None, verbose=False, timeout=10):
@@ -34,6 +34,10 @@ class SSHPing():
 
 def run():
     # argumentparsing goes here
+    parser = argparse.ArgumentParser(description='''Simple command line
+tool that lets you ping hosts that are only defined in your ssh config''')
+    parser.add_argument('target')
+    args = parser.parse_args()
     # instantiation goes here
     sshping = SSHPing(target=sys.argv[1], verbose=True)
     sshping.ping()
