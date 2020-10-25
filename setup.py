@@ -17,7 +17,7 @@ def get_version():
 description = "ping utility that lets you ping hosts that are only defined in your ~/.ssh/config file"
 
 
-setup(name='filesizemon',
+setup(name='sshping',
       version=get_version(),
       description=description,
       long_description=description,
