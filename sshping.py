@@ -7,7 +7,7 @@ from os.path import expanduser
 from pythonping import ping
 from pprint import pprint
 
-__version__ = '0.1'
+__version__ = '0.1.1'
 
 class SSHPing():
     def __init__(self, target=None, count=None, verbose=False, timeout=10):
