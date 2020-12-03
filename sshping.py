@@ -22,10 +22,7 @@ class SSHPing:
         self.timeout = timeout
 
     def ping(self):
-        try:
-            ping(self.target, timeout=self.timeout, verbose=self.verbose, count=self.count)
-        except PermissionError:
-            print("Privileges required: setuid the script, or uso sudo. RAW capability required to send ping.")
+        return ping(self.target, timeout=self.timeout, verbose=self.verbose, count=self.count)
 
 
 def run():
@@ -34,9 +31,12 @@ def run():
     parser.add_argument('-c', '--count', default=4, type=int, help="How many times to attempt the ping, 4 by default")
     parser.add_argument('-v', '--verbose', action='store_true', help="Be verbose")
     parsed = parser.parse_args()
-    # instantiation goes here
+
     sshping = SSHPing(target=parsed.target, count=parsed.count, verbose=parsed.verbose)
-    sshping.ping()
+    try:
+        sshping.ping()
+    except PermissionError:
+        print("Privileges required: setuid the script, or use sudo. RAW capability required to send ping.")
 
 
 if __name__ == '__main__':
