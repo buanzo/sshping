@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Author: Arturo 'Buanzo' Busleiman - October 2020
 import argparse
-from os.path import expanduser
+from pathlib import Path
 
 from pythonping import ping
 from sshconf import read_ssh_config
@@ -12,11 +12,15 @@ __version__ = '0.1.2'
 class SSHPing:
     def __init__(self, target, count=4, verbose=False, timeout=10):
         assert target is not None
-        config = read_ssh_config(expanduser('~/.ssh/config'))
-        try:
-            self.target = config.host(target)['hostname']
-        except KeyError:
-            self.target = target
+
+        self.target = target
+        config_path = Path('~/.ssh/config').expanduser()
+        if config_path.exists():
+            config = read_ssh_config(config_path)
+            try:
+                self.target = config.host(target)['hostname']
+            except KeyError:
+                pass
         self.count = count
         self.verbose = verbose
         self.timeout = timeout
