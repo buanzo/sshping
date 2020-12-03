@@ -35,7 +35,7 @@ def run():
 
     sshping = SSHPing(target=parsed.target, count=parsed.count, verbose=parsed.verbose, timeout=parsed.timeout)
     try:
-        sshping.ping()
+        print(sshping.ping())
     except PermissionError:
         print("Privileges required: setuid the script, or use sudo. RAW capability required to send ping.")
 
