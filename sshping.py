@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # Author: Arturo 'Buanzo' Busleiman - October 2020
 import argparse
-import sys
 from os.path import expanduser
 
 from pythonping import ping
@@ -11,8 +10,9 @@ __version__ = '0.1.2'
 
 
 class SSHPing:
-    def __init__(self, target, count=None, verbose=False, timeout=10):
-        config = read_ssh_config(expanduser("~/.ssh/config"))
+    def __init__(self, target, count=4, verbose=False, timeout=10):
+        assert target is not None
+        config = read_ssh_config(expanduser('~/.ssh/config'))
         try:
             self.target = config.host(target)['hostname']
         except KeyError:
@@ -23,20 +23,19 @@ class SSHPing:
 
     def ping(self):
         try:
-            if self.count is not None:  # FIX: I need to use **kwargs
-                ping(self.target, timeout=self.timeout, verbose=self.verbose, count=self.count)
-            else:
-                ping(self.target, timeout=self.timeout, verbose=self.verbose)
+            ping(self.target, timeout=self.timeout, verbose=self.verbose, count=self.count)
         except PermissionError:
-            print('Privileges required: setuid the script, or uso sudo. RAW capability required to send ping.')
+            print("Privileges required: setuid the script, or uso sudo. RAW capability required to send ping.")
 
 
 def run():
-    parser = argparse.ArgumentParser(description='''Simple command line tool that lets you ping hosts that are only defined in your ssh config''')
-    parser.add_argument('target')
-    args = parser.parse_args()
+    parser = argparse.ArgumentParser(description="""Simple command line tool that lets you ping hosts that are only defined in your ssh config""")
+    parser.add_argument('target', metavar="HOST", help="Name of host to ping")
+    parser.add_argument('-c', '--count', default=4, type=int, help="How many times to attempt the ping, 4 by default")
+    parser.add_argument('-v', '--verbose', action='store_true', help="Be verbose")
+    parsed = parser.parse_args()
     # instantiation goes here
-    sshping = SSHPing(target=sys.argv[1], verbose=True)
+    sshping = SSHPing(target=parsed.target, count=parsed.count, verbose=parsed.verbose)
     sshping.ping()
 
 
