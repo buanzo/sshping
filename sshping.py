@@ -29,10 +29,11 @@ def run():
     parser = argparse.ArgumentParser(description="""Simple command line tool that lets you ping hosts that are only defined in your ssh config""")
     parser.add_argument('target', metavar="HOST", help="Name of host to ping")
     parser.add_argument('-c', '--count', default=4, type=int, help="How many times to attempt the ping, 4 by default")
+    parser.add_argument('-t', '--timeout', default=10, type=int, help="Time in seconds before considering each non-arrived reply permanently lost")
     parser.add_argument('-v', '--verbose', action='store_true', help="Be verbose")
     parsed = parser.parse_args()
 
-    sshping = SSHPing(target=parsed.target, count=parsed.count, verbose=parsed.verbose)
+    sshping = SSHPing(target=parsed.target, count=parsed.count, verbose=parsed.verbose, timeout=parsed.timeout)
     try:
         sshping.ping()
     except PermissionError:
